@@ -70,9 +70,22 @@ public class ForgotPasswordEnterOTPFragment extends Fragment {
         });
 
         this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+            private String otp;
             @Override
             public void onClick(View view) {
-                startFragment(new ForgotPasswordNewPasswordFragment());
+                otp = editOtp.getText().toString();
+                if(!otp.isEmpty()) {
+                    this.requestServerForOtpVerification();
+                    startFragment(new ForgotPasswordNewPasswordFragment());
+                }
+                else{
+                    editOtp.setError(getString(R.string.error_required_field_otp));
+                    editOtp.requestFocus();
+                }
+            }
+
+            private void requestServerForOtpVerification() {
+                //
             }
         });
     }

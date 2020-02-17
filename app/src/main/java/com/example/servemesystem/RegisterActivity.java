@@ -4,6 +4,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -141,6 +143,12 @@ public class RegisterActivity extends AppCompatActivity {
             private boolean isEmailExist() {
 
                 //request server to verify
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                    etEmail.setError(getString(R.string.error_format_email_id));
+                    etEmail.requestFocus();
+                    return true;
+                }
+
                 return false;
 
             }
@@ -209,7 +217,9 @@ public class RegisterActivity extends AppCompatActivity {
     private void startLoginActivity(){
         Intent intentLogin = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intentLogin);
-         finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        finish();
     }
 
 
