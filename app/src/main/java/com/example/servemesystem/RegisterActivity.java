@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
+import android.util.Patterns;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
@@ -67,68 +69,43 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-
-    private void authentication(String email,String password){
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d("onSuccess", "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                        } else {
-                            Log.w("onFailure", "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(RegisterActivity.this, "createUserWithEmail:fail",
-                                    Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-    }
-
-    private void insertData(Map<String, Object> user){
-        Log.w("InIt","I'm here");
-        db.collection("test")
-                .add(user)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.w("onSuccess","DocumentSnapshot added with ID: "+documentReference.getId());
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("onFailure","Error adding document", e);
-                    }
-                });
-    }
-
     private void setButtonRegisterListener() {
         this.buttonRegister.setOnClickListener(new View.OnClickListener() {
             String firstName, lastName, email, password, confirmPassword, contactNumber, address;
             String state, country, zipcode;
-//            user information
+            //user information
             Map<String, Object> user=new HashMap<>();
 
             @Override
             public void onClick(View view) {
-//                get userinformation
                 this.getAllValuesFromEditTexts();
                 if (this.isFormValuesValid()) {
                     //send request to Server
-                    Log.w("init",email+":"+password);
-                    authentication(email,password);
-                    Toast.makeText(
-                            RegisterActivity.this,
-                            getString(R.string.message_registration_success),
-                            Toast.LENGTH_LONG).show();
-                    insertData(user);
-                    startLoginActivity();
+//                    createUserWithEmail(email,password);
+                    mAuth.createUserWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                @Override
+                                public void onComplete(@NonNull Task<AuthResult> task) {
+                                    //Register successful
+                                    if (task.isSuccessful()) {
+                                        // insert data to firestore
+                                        insertData();
+                                        Log.d("onSuccess", "createUserWithEmail:success");
+                                        Toast.makeText(
+                                                RegisterActivity.this,
+                                                getString(R.string.message_registration_success),
+                                                Toast.LENGTH_LONG).show();
+                                        startLoginActivity();
+                                        //Register failed
+                                    } else {
+                                        Log.w("onFailure", "createUserWithEmail:failure", task.getException());
+                                        Toast.makeText(RegisterActivity.this, "Registration Failed",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
                 }
             }
-
-
 
             private boolean isFormValuesValid() {
                 if (this.isAnyFieldEmpty() || this.isEmailExist() || this.isPasswordFormatWrong()
@@ -203,6 +180,12 @@ public class RegisterActivity extends AppCompatActivity {
             private boolean isEmailExist() {
 
                 //request server to verify
+                if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+                    etEmail.setError(getString(R.string.error_format_email_id));
+                    etEmail.requestFocus();
+                    return true;
+                }
+
                 return false;
 
             }
@@ -240,7 +223,6 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private void getAllValuesFromEditTexts() {
-
                 this.firstName = etFirstName.getText().toString();
                 this.lastName = etLastName.getText().toString();
                 this.email = etEmail.getText().toString();
@@ -260,6 +242,24 @@ public class RegisterActivity extends AppCompatActivity {
                 this.user.put("state",state);
                 this.user.put("country",country);
                 this.user.put("zip",zipcode);
+
+            }
+            private void insertData(){
+                Log.w("InIt","I'm here");
+                db.collection("test")
+                        .add(this.user)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.w("onSuccess","DocumentSnapshot added with ID: "+documentReference.getId());
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("onFailure","Error adding document", e);
+                            }
+                        });
             }
         });
     }
@@ -280,7 +280,9 @@ public class RegisterActivity extends AppCompatActivity {
     private void startLoginActivity(){
         Intent intentLogin = new Intent(RegisterActivity.this, LoginActivity.class);
         startActivity(intentLogin);
-         finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+
+        finish();
     }
 
 

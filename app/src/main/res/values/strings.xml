@@ -31,13 +31,15 @@
     <string name="error_required_field_state">State is required</string>
     <string name="error_required_field_country">Country is required</string>
     <string name="error_required_field_zip_code">Zip Code is required</string>
+    <string name="error_required_field_otp">OTP field is required</string>
+
     <string name="error_passwords_unmatch">Passwords do not match</string>
     <string name="error_password_length">Length of password is small</string>
     <string name="error_duplicate_email_id">Email ID already exists</string>
     <string name="error_duplicate_contact_number">Contact number already exists</string>
     <string name="error_format_address">Invalid Address</string>
     <string name="error_format_contact_number">Invalid contact number</string>
-    <string name="error_format_email_id">First Name is required</string>
+    <string name="error_format_email_id">Invalid Email ID</string>
     <string name="error_format_password">Invalid password format. Require 8 characters. Characters allowed are alphabets, numbers and special characters </string>
 
 
