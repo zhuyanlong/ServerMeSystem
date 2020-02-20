@@ -21,8 +21,12 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,8 +36,11 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etFirstName, etLastName, etEmail, etPassword, etConfirmPassword, etContactNumber;
     private EditText etAddress, etState, etCountry, etZipCode;
     private Button buttonBack, buttonRegister;
-    private FirebaseFirestore db= FirebaseFirestore.getInstance();;
-    private FirebaseAuth mAuth=FirebaseAuth.getInstance();
+    private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
+    private String collectionPath;
+    private boolean contactjudge;
+    private int signal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +48,16 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         this.setAllEditTexts();
         this.setAllButtons();
+        this.configDB();
+
+    }
+
+    private void configDB(){
+        collectionPath="test";
+        mAuth=FirebaseAuth.getInstance();
+        db= FirebaseFirestore.getInstance();
+        contactjudge=false;
+        signal=1;
     }
 
     private void setAllButtons() {
@@ -56,8 +73,6 @@ public class RegisterActivity extends AppCompatActivity {
     private void setAllButtonListeners() {
         this.setButtonBackListener();
         this.setButtonRegisterListener();
-
-
     }
 
     private void setButtonBackListener() {
@@ -101,6 +116,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         Log.w("onFailure", "createUserWithEmail:failure", task.getException());
                                         Toast.makeText(RegisterActivity.this, "Registration Failed",
                                                 Toast.LENGTH_SHORT).show();
+                                        etEmail.setError(getString(R.string.error_email_already_exist));
+                                        etEmail.requestFocus();
                                     }
                                 }
                             });
@@ -111,13 +128,35 @@ public class RegisterActivity extends AppCompatActivity {
                 if (this.isAnyFieldEmpty() || this.isEmailExist() || this.isPasswordFormatWrong()
                         || this.isPasswordsNotMatching() || this.isContactNumberFormatNotValid() ||
                         this.isContactNumberExist() || this.isAddressValueNotValid()) {
+
                     return false;
                 }
+                Log.w("pass", "pass formatcheck");
                 return true;
             }
 
             private boolean isContactNumberExist() {
                 //request server to check if contact number exist
+////                final Boolean[] judge=new Boolean[1];
+//                db.collection(collectionPath)
+//                        .whereEqualTo("contact", contactNumber)
+//                        .get()
+//                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                                //find ContactNumber
+//                                if (task.isSuccessful()) {
+//                                    Log.d("contactExist","contactExist");
+//                                    contactjudge=true;
+////                                    etContactNumber.setError(getString(R.string.error_contact_already_exist));
+////                                    etContactNumber.requestFocus();
+//                                    //not find ContactNumber
+//                                } else {
+//                                    contactjudge=false;
+//                                    Log.d("contactNotExist", "Error getting documents: ", task.getException());
+//                                }
+//                            }
+//                        });
                 return false;
             }
 
@@ -178,8 +217,33 @@ public class RegisterActivity extends AppCompatActivity {
             }
 
             private boolean isEmailExist() {
-
                 //request server to verify
+                final Boolean[] judge=new Boolean[1];
+                judge[0]=false;
+                db.collection(collectionPath)
+                        .whereEqualTo("email", email)
+                        .get()
+                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                            @Override
+                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                //find email
+                                if (task.isSuccessful()) {
+                                        Log.d("emailExist","emailExist");
+                                    judge[0]=true;
+                                    //not find email
+                                } else {
+                                    judge[0]=false;
+                                    Log.d("emailNotExist", "Error getting documents: ", task.getException());
+                                }
+                            }
+                        });
+                if(judge[0]==true){
+                    etEmail.setError(getString(R.string.error_email_already_exist));
+                    etEmail.requestFocus();
+                    return true;
+                }
+
+
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     etEmail.setError(getString(R.string.error_format_email_id));
                     etEmail.requestFocus();
@@ -227,7 +291,7 @@ public class RegisterActivity extends AppCompatActivity {
                 this.lastName = etLastName.getText().toString();
                 this.email = etEmail.getText().toString();
                 this.password = etPassword.getText().toString();
-                this.confirmPassword = etConfirmPassword.getText().toString();
+                this.confirmPassword=etConfirmPassword.getText().toString();
                 this.contactNumber = etContactNumber.getText().toString();
                 this.address = etAddress.getText().toString();
                 this.state = etState.getText().toString();
@@ -246,7 +310,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
             private void insertData(){
                 Log.w("InIt","I'm here");
-                db.collection("test")
+                db.collection(collectionPath)
                         .add(this.user)
                         .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
