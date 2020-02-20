@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -16,11 +17,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 
 
 public class ForgotPasswordEnterEmailFragment extends Fragment {
     private Button buttonBack, buttonSubmit;
     private EditText editEmail;
+    private FirebaseAuth firebaseAuth;
 
     public ForgotPasswordEnterEmailFragment() {
         // Required empty public constructor
@@ -100,7 +107,7 @@ public class ForgotPasswordEnterEmailFragment extends Fragment {
                 emailId = editEmail.getText().toString();
                 if(this.isEmailIdValid()){
                     this.sendOtpRequestToServer();
-                    this.startForgotPasswordEnterOtpFragment();
+//                    this.startForgotPasswordEnterOtpFragment();
 
                 }
             }
@@ -120,8 +127,20 @@ public class ForgotPasswordEnterEmailFragment extends Fragment {
             }
 
             private void sendOtpRequestToServer() {
-
                 // make server do this
+                firebaseAuth = FirebaseAuth.getInstance();
+                firebaseAuth.sendPasswordResetEmail(emailId)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if(task.isSuccessful()){
+                                    Toast.makeText(getActivity(), "Sent to you email.", Toast.LENGTH_LONG).show();
+                                    startLoginActivity();
+                                } else {
+                                    Toast.makeText(getActivity(), task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
             }
 
             private void startForgotPasswordEnterOtpFragment() {

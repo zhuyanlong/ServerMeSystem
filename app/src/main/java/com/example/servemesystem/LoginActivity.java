@@ -1,5 +1,6 @@
 package com.example.servemesystem;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -8,12 +9,20 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+
 
 public class LoginActivity extends AppCompatActivity {
     private TextView textRegister;
     private TextView textForgotPassword;
     private Button buttonLogin;
     private EditText editEmail, editPassword;
+    private FirebaseAuth mAuth;
 
 
 
@@ -32,18 +41,34 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setAllButtonListener() {
+        mAuth = FirebaseAuth.getInstance();
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             private String email, password;
             @Override
             public void onClick(View view) {
                 this.getLogindetails();
                 if(this.isLoginDetailsValid()) {
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                    startActivity(intent);
-                    finish();
+                    //firebase authentication
+                    mAuth.signInWithEmailAndPassword(email, password)
+                            .addOnCompleteListener(
+                                    new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                                                startActivity(intent);
+                                                finish();
+                                                Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
+                                            } else {
+                                                //login failed
+                                                Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_LONG).show();
+                                            }
+                                        }
+                                    });
                 }
             }
+
 
             private boolean isLoginDetailsValid() {
                 if(email.isEmpty()){

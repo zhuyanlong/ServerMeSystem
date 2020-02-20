@@ -41,7 +41,8 @@
     <string name="error_format_contact_number">Invalid contact number</string>
     <string name="error_format_email_id">Invalid Email ID</string>
     <string name="error_format_password">Invalid password format. Require 8 characters. Characters allowed are alphabets, numbers and special characters </string>
-
+    <string name="error_email_already_exist">Email exists</string>
+    <string name="error_contact_already_exist">Contact number exists</string>
 
     <string name="message_registration_success">Registration Succesfull</string>
     <string name="message_forgot_password_activity">Enter email ID to receive OTP</string>
