@@ -39,8 +39,6 @@ public class RegisterActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private String collectionPath;
-    private boolean contactjudge;
-    private int signal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,11 +51,9 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void configDB(){
-        collectionPath="test";
+        collectionPath="users";
         mAuth=FirebaseAuth.getInstance();
         db= FirebaseFirestore.getInstance();
-        contactjudge=false;
-        signal=1;
     }
 
     private void setAllButtons() {
@@ -88,12 +84,11 @@ public class RegisterActivity extends AppCompatActivity {
         this.buttonRegister.setOnClickListener(new View.OnClickListener() {
             String firstName, lastName, email, password, confirmPassword, contactNumber, address;
             String state, country, zipcode;
-            //user information
-            Map<String, Object> user=new HashMap<>();
-
+            User user=new User();
             @Override
             public void onClick(View view) {
                 this.getAllValuesFromEditTexts();
+                this.setAllValues();
                 if (this.isFormValuesValid()) {
                     //send request to Server
 //                    createUserWithEmail(email,password);
@@ -103,21 +98,23 @@ public class RegisterActivity extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     //Register successful
                                     if (task.isSuccessful()) {
-                                        // insert data to firestore
-                                        insertData();
                                         Log.d("onSuccess", "createUserWithEmail:success");
                                         Toast.makeText(
                                                 RegisterActivity.this,
                                                 getString(R.string.message_registration_success),
                                                 Toast.LENGTH_LONG).show();
+                                        FirebaseUser user = mAuth.getCurrentUser();
+                                        String uid=user.getUid();
+                                        // insert data to firestore
+                                        insertData(uid);
                                         startLoginActivity();
                                         //Register failed
                                     } else {
                                         Log.w("onFailure", "createUserWithEmail:failure", task.getException());
                                         Toast.makeText(RegisterActivity.this, "Registration Failed",
                                                 Toast.LENGTH_SHORT).show();
-                                        etEmail.setError(getString(R.string.error_email_already_exist));
-                                        etEmail.requestFocus();
+//                                        etEmail.setError(getString(R.string.error_email_already_exist));
+//                                        etEmail.requestFocus();
                                     }
                                 }
                             });
@@ -137,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
 
             private boolean isContactNumberExist() {
                 //request server to check if contact number exist
-////                final Boolean[] judge=new Boolean[1];
+//                final Boolean[] judge=new Boolean[1];
 //                db.collection(collectionPath)
 //                        .whereEqualTo("contact", contactNumber)
 //                        .get()
@@ -147,12 +144,10 @@ public class RegisterActivity extends AppCompatActivity {
 //                                //find ContactNumber
 //                                if (task.isSuccessful()) {
 //                                    Log.d("contactExist","contactExist");
-//                                    contactjudge=true;
-////                                    etContactNumber.setError(getString(R.string.error_contact_already_exist));
-////                                    etContactNumber.requestFocus();
+//                                    etContactNumber.setError(getString(R.string.error_contact_already_exist));
+//                                    etContactNumber.requestFocus();
 //                                    //not find ContactNumber
 //                                } else {
-//                                    contactjudge=false;
 //                                    Log.d("contactNotExist", "Error getting documents: ", task.getException());
 //                                }
 //                            }
@@ -218,8 +213,6 @@ public class RegisterActivity extends AppCompatActivity {
 
             private boolean isEmailExist() {
                 //request server to verify
-                final Boolean[] judge=new Boolean[1];
-                judge[0]=false;
                 db.collection(collectionPath)
                         .whereEqualTo("email", email)
                         .get()
@@ -229,20 +222,14 @@ public class RegisterActivity extends AppCompatActivity {
                                 //find email
                                 if (task.isSuccessful()) {
                                         Log.d("emailExist","emailExist");
-                                    judge[0]=true;
+                                    etEmail.setError(getString(R.string.error_email_already_exist));
+                                    etEmail.requestFocus();
                                     //not find email
                                 } else {
-                                    judge[0]=false;
                                     Log.d("emailNotExist", "Error getting documents: ", task.getException());
                                 }
                             }
                         });
-                if(judge[0]==true){
-                    etEmail.setError(getString(R.string.error_email_already_exist));
-                    etEmail.requestFocus();
-                    return true;
-                }
-
 
                 if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
                     etEmail.setError(getString(R.string.error_format_email_id));
@@ -297,25 +284,26 @@ public class RegisterActivity extends AppCompatActivity {
                 this.state = etState.getText().toString();
                 this.country = etCountry.getText().toString();
                 this.zipcode = etZipCode.getText().toString();
-                this.user.put("firstname",firstName);
-                this.user.put("lastname",lastName);
-                this.user.put("email",email);
-                this.user.put("password",password);
-                this.user.put("contact",contactNumber);
-                this.user.put("address",address);
-                this.user.put("state",state);
-                this.user.put("country",country);
-                this.user.put("zip",zipcode);
-
             }
-            private void insertData(){
+
+            private void setAllValues(){
+                this.user.setFirstName(this.firstName);
+                this.user.setLastName(this.lastName);
+                this.user.setEmail(this.email);
+                this.user.setContactNumber(this.contactNumber);
+                this.user.setAddress(this.address);
+                this.user.setState(this.state);
+                this.user.setCountry(this.country);
+                this.user.setZipcode(this.zipcode);
+            }
+
+            private void insertData(String uid){
                 Log.w("InIt","I'm here");
-                db.collection(collectionPath)
-                        .add(this.user)
-                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                db.collection(collectionPath).document(uid).set(this.user)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
-                            public void onSuccess(DocumentReference documentReference) {
-                                Log.w("onSuccess","DocumentSnapshot added with ID: "+documentReference.getId());
+                            public void onSuccess(Void aVoid) {
+                                Log.d("onSuccess", "DocumentSnapshot successfully written!");
                             }
                         })
                         .addOnFailureListener(new OnFailureListener() {
