@@ -1,0 +1,59 @@
+<resources>
+    <string name="app_name">ServeMeSystem</string>
+    <string name="message_register_activity">Enter your details</string>
+    <string name="heading_register_user">Register User</string>
+    <string name="user_first_name">First Name</string>
+    <string name="user_last_name">Last Name</string>
+    <string name="user_email">Email ID</string>
+    <string name="user_password">Password</string>
+    <string name="user_confirm_password">Confirm Password</string>
+    <string name="user_contact_number">Contact Number</string>
+    <string name="user_address">Address</string>
+    <string name="user_city">City</string>
+    <string name="user_state">State</string>
+    <string name="user_country">Country</string>
+    <string name="user_zipcode">Zip Code</string>
+    <string name="button_register">Register</string>
+    <string name="button_back">Back</string>
+    <string name="button_login">Login</string>
+    <string name="button_submit">Submit</string>
+    <string name="message_login_activity">Enter login credentials.</string>
+    <string name="text_register_user">New User? Register Here.</string>
+    <string name="text_forgot_password">Forgot Password?</string>
+    <string name="user_otp">OTP</string>
+
+    <string name="error_required_field_first_name">First Name is required</string>
+    <string name="error_required_field_email">Email ID is required</string>
+    <string name="error_required_field_password">Password is required</string>
+    <string name="error_required_field_confirm_password">Confirm Password is required</string>
+    <string name="error_required_field_contact_number">Contact number is required</string>
+    <string name="error_required_field_address">Address is required</string>
+    <string name="error_required_field_state">State is required</string>
+    <string name="error_required_field_country">Country is required</string>
+    <string name="error_required_field_zip_code">Zip Code is required</string>
+    <string name="error_required_field_otp">OTP field is required</string>
+
+    <string name="error_passwords_unmatch">Passwords do not match</string>
+    <string name="error_password_length">Length of password is small</string>
+    <string name="error_duplicate_email_id">Email ID already exists</string>
+    <string name="error_duplicate_contact_number">Contact number already exists</string>
+    <string name="error_format_address">Invalid Address</string>
+    <string name="error_format_contact_number">Invalid contact number</string>
+    <string name="error_format_email_id">Invalid Email ID</string>
+    <string name="error_format_password">Invalid password format. Require 8 characters. Characters allowed are alphabets, numbers and special characters </string>
+    <string name="error_email_already_exist">Email exists</string>
+    <string name="error_contact_already_exist">Contact number exists</string>
+
+    <string name="message_registration_success">Registration Succesfull</string>
+    <string name="message_forgot_password_activity">Enter email ID to receive OTP</string>
+    <string name="message_forgot_password_otp">Enter OTP</string>
+    <string name="message_forgot_password_new_password">Enter new password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="heading_forgot_password">Forgot Password</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>
