@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#ffffff</color>
+    <color name="colorPrimary">#FFFFFF</color>
+    <color name="transparent">#00000000</color>
     <color name="colorPrimaryDark">#000000</color>
-    <color name="colorGrey">#808080</color>
+    <color name="colorGrey">#0B4988</color>
     <color name="backgroundcolor">#fcfcfc</color>
     <color name="lightgray">#ededed</color>
     <color name="deeppurple">#7c4dff</color>
