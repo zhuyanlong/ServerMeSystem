@@ -57,5 +57,17 @@
     <string name="open">open</string>
     <string name="close">close</string>
 
+    <!-- Settings Activity Strings 03.03.2020-->
+    <string name="settings_text">Settings</string>
+    <string name="sound_switch">Notification Sound</string>
+    <string name="communicatio_switch">Receive Communication</string>
+    <string name="use_reward_points_switch">Use Reward Points</string>
+    <string name="settings_text_notification">Notification Settings</string>
+    <string name="settings_text_account">Account Settings</string>
+
+
+
+
+
 
 </resources>
