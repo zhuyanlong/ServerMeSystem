@@ -26,6 +26,10 @@
                 android:id="@+id/become_vendor"
                 android:icon="@drawable/ic_build_black_24dp"
                 android:title="Become a vendor"/>
+            <item
+                android:id="@+id/setting"
+                android:icon="@drawable/ic_settings_applications_black_24dp"
+                android:title="Settings"/>
 
         </menu>
     </item>

@@ -91,6 +91,9 @@ public class HomeActivity extends AppCompatActivity
             // TODO This is the menu item for vendor registration.
         }
 
+        if(menuItem.getItemId() == R.id.setting){
+            // TODO This is the menu item for settings.
+        }
         return true;
     }
 }
