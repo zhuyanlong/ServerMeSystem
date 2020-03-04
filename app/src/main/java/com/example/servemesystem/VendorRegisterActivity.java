@@ -26,7 +26,7 @@ public class VendorRegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_vender_register);
+        setContentView(R.layout.activity_vendor_register);
 
         this.buttonSubmit = findViewById(R.id.button_vendorRegister_submit);
         this.checkBoxAgreement = findViewById(R.id.checkBox_agreement);
@@ -40,7 +40,7 @@ public class VendorRegisterActivity extends AppCompatActivity {
 
         for(int i = 0; i < checkboxText.length; i++){
 
-            LinearLayout linearLayout_newService = (LinearLayout) getLayoutInflater().inflate(R.layout.activity_vender_register_checkbox, null);
+            LinearLayout linearLayout_newService = (LinearLayout) getLayoutInflater().inflate(R.layout.activity_vendor_register_checkbox, null);
 
             //different type of service needs different view:
             //type1: $_/hour
