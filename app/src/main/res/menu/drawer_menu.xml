@@ -22,6 +22,11 @@
                 android:id="@+id/notification"
                 android:icon="@drawable/ic_notifications_black_24dp"
                 android:title="Notifications"/>
+            <item
+                android:id="@+id/become_vendor"
+                android:icon="@drawable/ic_build_black_24dp"
+                android:title="Become a vendor"/>
+
         </menu>
     </item>
 </menu>

@@ -87,6 +87,10 @@ public class HomeActivity extends AppCompatActivity
             fragmentTransaction.commit();
         }
 
+        if(menuItem.getItemId() == R.id.become_vendor){
+            // TODO This is the menu item for vendor registration.
+        }
+
         return true;
     }
 }
