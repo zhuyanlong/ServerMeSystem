@@ -1,5 +1,11 @@
 package com.example.servemesystem;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import com.google.android.material.navigation.NavigationView;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,6 +21,7 @@ import android.view.MenuItem;
 
 import com.example.servemesystem.helper.SaveSharedPreference;
 import com.google.android.material.navigation.NavigationView;
+
 
 public class HomeActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener{
@@ -95,6 +102,17 @@ public class HomeActivity extends AppCompatActivity
             startActivity(intent);
             finish();
 
+        }
+
+        if(menuItem.getItemId() == R.id.become_vendor){
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new VendorRegisterFragment());
+            fragmentTransaction.commit();
+        }
+
+        if(menuItem.getItemId() == R.id.setting){
+            // TODO This is the menu item for settings.
         }
 
         return true;

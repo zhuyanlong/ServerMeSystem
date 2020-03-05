@@ -3,11 +3,15 @@ package com.example.servemesystem;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -47,6 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         this.setAllEditTexts();
         this.setAllTextViews();
         this.setAllButtons();
+        this.setEditPasswordListener();
     }
 
     private boolean isUserLoggedIn() {
@@ -59,6 +64,20 @@ public class LoginActivity extends AppCompatActivity {
     private void setAllButtons() {
         this.defineButtons();
         this.setAllButtonListener();
+    }
+
+    private void setEditPasswordListener(){
+        editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int keyCode, KeyEvent event) {
+                if((event.getAction() == KeyEvent.ACTION_DOWN)||(keyCode == KeyEvent.KEYCODE_ENTER)){
+                    InputMethodManager imm = (InputMethodManager) getBaseContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(editPassword.getWindowToken(), 0);
+                    buttonLogin.performClick();
+                }
+                return false;
+            }
+        });
     }
 
     private void setAllButtonListener() {

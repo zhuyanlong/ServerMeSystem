@@ -22,10 +22,19 @@
                 android:id="@+id/notification"
                 android:icon="@drawable/ic_notifications_black_24dp"
                 android:title="Notifications"/>
+
+            <item android:id="@+id/become_vendor"
+                android:icon="@drawable/ic_build_black_24dp"
+                android:title="Become a vendor"/>
             <item
-                android:id="@+id/logout"
+                android:id="@+id/setting"
+                android:icon="@drawable/ic_settings_applications_black_24dp"
+                android:title="Settings"/>
+
+            <item android:id="@+id/logout"
                 android:icon="@drawable/ic_exit_to_app_black_24dp"
                 android:title="Logout"/>
+
         </menu>
     </item>
 </menu>

@@ -52,6 +52,9 @@
     <string name="message_forgot_password_new_password">Enter new password</string>
     <string name="message_forgot_password_successful">Password changed successfully</string>
 
+    <string name="heading_vendor_register">Vendor Registration</string>
+    <string name="message_vendor_register_agreement">I agree to pay 10% of money received as fee to ServeMe.</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="heading_forgot_password">Forgot Password</string>
 
@@ -59,6 +62,18 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="open">open</string>
     <string name="close">close</string>
+
+    <!-- Settings Activity Strings 03.03.2020-->
+    <string name="settings_text">Settings</string>
+    <string name="sound_switch">Notification Sound</string>
+    <string name="communicatio_switch">Receive Communication</string>
+    <string name="use_reward_points_switch">Use Reward Points</string>
+    <string name="settings_text_notification">Notification Settings</string>
+    <string name="settings_text_account">Account Settings</string>
+
+
+    <string name="heading_profile">My Profile</string>
+
 
 
 </resources>
