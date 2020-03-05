@@ -49,6 +49,9 @@
     <string name="message_forgot_password_otp">Enter OTP</string>
     <string name="message_forgot_password_new_password">Enter new password</string>
 
+    <string name="heading_vendor_register">Vendor Registration</string>
+    <string name="message_vendor_register_agreement">I agree to pay 10% of money received as fee to ServeMe.</string>
+
     <!-- TODO: Remove or change this placeholder text -->
     <string name="heading_forgot_password">Forgot Password</string>
 
