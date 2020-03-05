@@ -13,7 +13,6 @@ public class User implements Serializable {
     private String contactNumber;
 
 
-    private String password;
 
 
 
@@ -81,13 +80,6 @@ public class User implements Serializable {
         this.contactNumber = contactNumber;
     }
 
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
 
 
 

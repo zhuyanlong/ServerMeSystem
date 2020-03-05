@@ -66,134 +66,134 @@ public class ForgotPasswordEnterOTPFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password_enter_ot, container, false);
-        this.getUserDetails();
-        this.setEditText(view);
-        this.setAllButtons(view);
-        this.sendVerificationCode(user.getContactNumber());
+//        this.getUserDetails();
+//        this.setEditText(view);
+//        this.setAllButtons(view);
+//        this.sendVerificationCode(user.getContactNumber());
         return view;
     }
 
-    private void getUserDetails() {
-        user = (User)getArguments().getSerializable("user");
-    }
-
-    private void sendVerificationCode(String mobile) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+1" + mobile,
-                60,
-                TimeUnit.SECONDS,
-                TaskExecutors.MAIN_THREAD,
-                mCallbacks);
-    }
-
-    private void setEditText(View view) {
-        this.editOtp = view.findViewById(R.id.editOtp);
-    }
-
-    private void setAllButtons(View view) {
-        this.defineAllButtons(view);
-        this.setAllButtonListener(view);
-    }
-
-    private void defineAllButtons(View view) {
-        this.buttonBack = view.findViewById(R.id.buttonBack);
-        this.buttonSubmit = view.findViewById(R.id.buttonSubmit);
-    }
-
-    private void setAllButtonListener(View view) {
-        this.buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
-        });
-
-        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            private String otp;
-            @Override
-            public void onClick(View view) {
-                otp = editOtp.getText().toString();
-                if(!otp.isEmpty()) {
-                    verifyVerificationCode(otp);                }
-                else{
-                    editOtp.setError(getString(R.string.error_required_field_otp));
-                    editOtp.requestFocus();
-                }
-            }
-
-
-        });
-    }
-
-    private void startFragment(Fragment fragment){
-        Bundle bundle = new Bundle();
-        bundle.putSerializable("user", user);
-        fragment.setArguments(bundle);
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.layoutForgotPassword, fragment);
-        transaction.commit();
-    }
-
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            //Getting the code sent by SMS
-            String code = phoneAuthCredential.getSmsCode();
-
-            //sometime the code is not detected automatically
-            //in this case the code will be null
-            //so user has to manually enter the code
-            if (code != null) {
-                editOtp.setText(code);
-                //verifying the code
-                verifyVerificationCode(code);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            mVerificationId = s;
-            mResendToken = forceResendingToken;
-        }
-    };
-
-    private void verifyVerificationCode(String otp) {
-        //creating the credential
-        if(mVerificationId != null) {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
-
-            //signing the user
-            signInWithPhoneAuthCredential(credential);
-        }
-        else
-            editOtp.setError(getString(R.string.error_invalid_otp));
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //verification successful we will start the profile activity
-                            startFragment(new ForgotPasswordNewPasswordFragment());
-
-                        } else {
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                editOtp.setError(getString(R.string.error_invalid_otp));
-                            }
-                            else
-                                editOtp.setError(getString(R.string.error_generic));
-                                Log.e(TAG, task.getException().toString());                        }
-
-                }
-                });
-    }
+//    private void getUserDetails() {
+//        user = (User)getArguments().getSerializable("user");
+//    }
+//
+//    private void sendVerificationCode(String mobile) {
+//        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+//                "+1" + mobile,
+//                60,
+//                TimeUnit.SECONDS,
+//                TaskExecutors.MAIN_THREAD,
+//                mCallbacks);
+//    }
+//
+//    private void setEditText(View view) {
+//        this.editOtp = view.findViewById(R.id.editOtp);
+//    }
+//
+//    private void setAllButtons(View view) {
+//        this.defineAllButtons(view);
+//        this.setAllButtonListener(view);
+//    }
+//
+//    private void defineAllButtons(View view) {
+//        this.buttonBack = view.findViewById(R.id.buttonBack);
+//        this.buttonSubmit = view.findViewById(R.id.buttonSubmit);
+//    }
+//
+//    private void setAllButtonListener(View view) {
+//        this.buttonBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getFragmentManager().popBackStack();
+//            }
+//        });
+//
+//        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+//            private String otp;
+//            @Override
+//            public void onClick(View view) {
+//                otp = editOtp.getText().toString();
+//                if(!otp.isEmpty()) {
+//                    verifyVerificationCode(otp);                }
+//                else{
+//                    editOtp.setError(getString(R.string.error_required_field_otp));
+//                    editOtp.requestFocus();
+//                }
+//            }
+//
+//
+//        });
+//    }
+//
+//    private void startFragment(Fragment fragment){
+//        Bundle bundle = new Bundle();
+//        bundle.putSerializable("user", user);
+//        fragment.setArguments(bundle);
+//        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+//        transaction.replace(R.id.layoutForgotPassword, fragment);
+//        transaction.commit();
+//    }
+//
+//    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+//        @Override
+//        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+//            //Getting the code sent by SMS
+//            String code = phoneAuthCredential.getSmsCode();
+//
+//            //sometime the code is not detected automatically
+//            //in this case the code will be null
+//            //so user has to manually enter the code
+//            if (code != null) {
+//                editOtp.setText(code);
+//                //verifying the code
+//                verifyVerificationCode(code);
+//            }
+//        }
+//
+//        @Override
+//        public void onVerificationFailed(FirebaseException e) {
+//            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//        }
+//
+//        @Override
+//        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+//            super.onCodeSent(s, forceResendingToken);
+//            mVerificationId = s;
+//            mResendToken = forceResendingToken;
+//        }
+//    };
+//
+//    private void verifyVerificationCode(String otp) {
+//        //creating the credential
+//        if(mVerificationId != null) {
+//            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+//
+//            //signing the user
+//            signInWithPhoneAuthCredential(credential);
+//        }
+//        else
+//            editOtp.setError(getString(R.string.error_invalid_otp));
+//    }
+//
+//    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            //verification successful we will start the profile activity
+//                            startFragment(new ForgotPasswordNewPasswordFragment());
+//
+//                        } else {
+//                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+//                                editOtp.setError(getString(R.string.error_invalid_otp));
+//                            }
+//                            else
+//                                editOtp.setError(getString(R.string.error_generic));
+//                                Log.e(TAG, task.getException().toString());                        }
+//
+//                }
+//                });
+//    }
 
 }

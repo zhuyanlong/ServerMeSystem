@@ -90,7 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                 this.getLogindetails();
                 if(this.isLoginDetailsValid()) {
                     //firebase authentication
-                    mAuth.signInWithEmailAndPassword(email, MD5.getMd5(password))
+                    mAuth.signInWithEmailAndPassword(email, password)
                             .addOnCompleteListener(
                                     new OnCompleteListener<AuthResult>() {
                                         @Override

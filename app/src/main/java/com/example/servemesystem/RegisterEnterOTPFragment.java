@@ -68,186 +68,186 @@ public class RegisterEnterOTPFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_register_enter_o_t_p, container, false);
-        this.getUserDetails();
-        this.setEditText(view);
-        this.setAllButtons(view);
-        this.sendVerificationCode(user.getContactNumber());
-        this.setAndroidBackKeyButton(view);
+//        this.getUserDetails();
+//        this.setEditText(view);
+//        this.setAllButtons(view);
+//        this.sendVerificationCode(user.getContactNumber());
+//        this.setAndroidBackKeyButton(view);
         return view;
     }
 
-    private void setAndroidBackKeyButton(View view) {
-        view.setFocusableInTouchMode(true);
-        view.requestFocus();
-        view.setOnKeyListener( new View.OnKeyListener()
-        {
-            @Override
-            public boolean onKey( View v, int keyCode, KeyEvent event )
-            {
-                if( keyCode == KeyEvent.KEYCODE_BACK )
-                {
-                    startLoginActivity();
-                    return true;
-                }
-                return false;
-            }
-        } );
-    }
-
-    private void getUserDetails() {
-        user = (User)getArguments().getSerializable("user");
-    }
-
-    private void sendVerificationCode(String mobile) {
-        PhoneAuthProvider.getInstance().verifyPhoneNumber(
-                "+1" + mobile,
-                60,
-                TimeUnit.SECONDS,
-                TaskExecutors.MAIN_THREAD,
-                mCallbacks);
-    }
-
-    private void setEditText(View view) {
-        this.editOtp = view.findViewById(R.id.editOtp);
-    }
-
-    private void setAllButtons(View view) {
-        this.defineAllButtons(view);
-        this.setAllButtonListener(view);
-    }
-
-    private void defineAllButtons(View view) {
-        this.buttonBack = view.findViewById(R.id.buttonBack);
-        this.buttonSubmit = view.findViewById(R.id.buttonSubmit);
-    }
-
-    private void setAllButtonListener(View view) {
-        this.buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
-        });
-
-        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            private String otp;
-            @Override
-            public void onClick(View view) {
-                otp = editOtp.getText().toString();
-                if(!otp.isEmpty()) {
-                    verifyVerificationCode(otp);                }
-                else{
-                    editOtp.setError(getString(R.string.error_required_field_otp));
-                    editOtp.requestFocus();
-                }
-            }
-
-
-        });
-    }
-
-    private void startLoginActivity(){
-        Intent intentLogin = new Intent(getContext(), LoginActivity.class);
-        intentLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intentLogin);
-        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
-        getActivity().finish();
-    }
-
-    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
-        @Override
-        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
-            //Getting the code sent by SMS
-            String code = phoneAuthCredential.getSmsCode();
-
-            //sometime the code is not detected automatically
-            //in this case the code will be null
-            //so user has to manually enter the code
-            if (code != null) {
-                editOtp.setText(code);
-                //verifying the code
-                verifyVerificationCode(code);
-            }
-        }
-
-        @Override
-        public void onVerificationFailed(FirebaseException e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
-
-        @Override
-        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
-            super.onCodeSent(s, forceResendingToken);
-            mVerificationId = s;
-            mResendToken = forceResendingToken;
-        }
-    };
-
-    private void verifyVerificationCode(String otp) {
-        //creating the credential
-        if(mVerificationId != null) {
-            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
-
-            //signing the user
-            signInWithPhoneAuthCredential(credential);
-        }
-        else
-            editOtp.setError(getString(R.string.error_invalid_otp));
-    }
-
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            //verification successful we will start the profile activity
-                            registerUserWithFirebase();
-                            startLoginActivity();
-
-                        } else {
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                editOtp.setError(getString(R.string.error_invalid_otp));
-                            }
-                            else
-                                editOtp.setError(getString(R.string.error_generic));
-                            Log.e(TAG, task.getException().toString());
-                        }
-                    }
-                });
-    }
-
-    private void registerUserWithFirebase(){
-        mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if(task.isSuccessful()){
-                            insertUserDetailsToFirebase();
-                        }
-                        else{
-                            Toast.makeText(getContext(), getString(R.string.error_generic), Toast.LENGTH_LONG).show();
-                            Log.e(TAG, task.getException().toString());
-                        }
-                    }
-                });
-    }
-
-    private void insertUserDetailsToFirebase(){
-        db.collection(collectionPath).document(mAuth.getCurrentUser().getUid()).set(user)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d(TAG, "DocumentSnapshot successfully written!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG,"Error adding document", e);
-                    }
-                });
-    }
+//    private void setAndroidBackKeyButton(View view) {
+//        view.setFocusableInTouchMode(true);
+//        view.requestFocus();
+//        view.setOnKeyListener( new View.OnKeyListener()
+//        {
+//            @Override
+//            public boolean onKey( View v, int keyCode, KeyEvent event )
+//            {
+//                if( keyCode == KeyEvent.KEYCODE_BACK )
+//                {
+//                    startLoginActivity();
+//                    return true;
+//                }
+//                return false;
+//            }
+//        } );
+//    }
+//
+//    private void getUserDetails() {
+//        user = (User)getArguments().getSerializable("user");
+//    }
+//
+//    private void sendVerificationCode(String mobile) {
+//        PhoneAuthProvider.getInstance().verifyPhoneNumber(
+//                "+1" + mobile,
+//                60,
+//                TimeUnit.SECONDS,
+//                TaskExecutors.MAIN_THREAD,
+//                mCallbacks);
+//    }
+//
+//    private void setEditText(View view) {
+//        this.editOtp = view.findViewById(R.id.editOtp);
+//    }
+//
+//    private void setAllButtons(View view) {
+//        this.defineAllButtons(view);
+//        this.setAllButtonListener(view);
+//    }
+//
+//    private void defineAllButtons(View view) {
+//        this.buttonBack = view.findViewById(R.id.buttonBack);
+//        this.buttonSubmit = view.findViewById(R.id.buttonSubmit);
+//    }
+//
+//    private void setAllButtonListener(View view) {
+//        this.buttonBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getFragmentManager().popBackStack();
+//            }
+//        });
+//
+//        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+//            private String otp;
+//            @Override
+//            public void onClick(View view) {
+//                otp = editOtp.getText().toString();
+//                if(!otp.isEmpty()) {
+//                    verifyVerificationCode(otp);                }
+//                else{
+//                    editOtp.setError(getString(R.string.error_required_field_otp));
+//                    editOtp.requestFocus();
+//                }
+//            }
+//
+//
+//        });
+//    }
+//
+//    private void startLoginActivity(){
+//        Intent intentLogin = new Intent(getContext(), LoginActivity.class);
+//        intentLogin.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        startActivity(intentLogin);
+//        getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+//        getActivity().finish();
+//    }
+//
+//    private PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
+//        @Override
+//        public void onVerificationCompleted(PhoneAuthCredential phoneAuthCredential) {
+//            //Getting the code sent by SMS
+//            String code = phoneAuthCredential.getSmsCode();
+//
+//            //sometime the code is not detected automatically
+//            //in this case the code will be null
+//            //so user has to manually enter the code
+//            if (code != null) {
+//                editOtp.setText(code);
+//                //verifying the code
+//                verifyVerificationCode(code);
+//            }
+//        }
+//
+//        @Override
+//        public void onVerificationFailed(FirebaseException e) {
+//            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+//        }
+//
+//        @Override
+//        public void onCodeSent(String s, PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+//            super.onCodeSent(s, forceResendingToken);
+//            mVerificationId = s;
+//            mResendToken = forceResendingToken;
+//        }
+//    };
+//
+//    private void verifyVerificationCode(String otp) {
+//        //creating the credential
+//        if(mVerificationId != null) {
+//            PhoneAuthCredential credential = PhoneAuthProvider.getCredential(mVerificationId, otp);
+//
+//            //signing the user
+//            signInWithPhoneAuthCredential(credential);
+//        }
+//        else
+//            editOtp.setError(getString(R.string.error_invalid_otp));
+//    }
+//
+//    private void signInWithPhoneAuthCredential(PhoneAuthCredential credential) {
+//        mAuth.signInWithCredential(credential)
+//                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+//
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if (task.isSuccessful()) {
+//                            //verification successful we will start the profile activity
+//                            registerUserWithFirebase();
+//                            startLoginActivity();
+//
+//                        } else {
+//                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
+//                                editOtp.setError(getString(R.string.error_invalid_otp));
+//                            }
+//                            else
+//                                editOtp.setError(getString(R.string.error_generic));
+//                            Log.e(TAG, task.getException().toString());
+//                        }
+//                    }
+//                });
+//    }
+//
+//    private void registerUserWithFirebase(){
+//        mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
+//                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<AuthResult> task) {
+//                        if(task.isSuccessful()){
+//                            insertUserDetailsToFirebase();
+//                        }
+//                        else{
+//                            Toast.makeText(getContext(), getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+//                            Log.e(TAG, task.getException().toString());
+//                        }
+//                    }
+//                });
+//    }
+//
+//    private void insertUserDetailsToFirebase(){
+//        db.collection(collectionPath).document(mAuth.getCurrentUser().getUid()).set(user)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Log.d(TAG, "DocumentSnapshot successfully written!");
+//                    }
+//                })
+//                .addOnFailureListener(new OnFailureListener() {
+//                    @Override
+//                    public void onFailure(@NonNull Exception e) {
+//                        Log.w(TAG,"Error adding document", e);
+//                    }
+//                });
+//    }
 }
 

@@ -57,130 +57,131 @@ public class ForgotPasswordNewPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password_new_password, container, false);
-        this.getUserDetails();
-        this.setAllEditTexts(view);
-        this.setAllButtons(view);
+//        this.getUserDetails();
+//        this.setAllEditTexts(view);
+//        this.setAllButtons(view);
         return view;
     }
-
-    private void getUserDetails() {
-        this.user = (User)getArguments().getSerializable("user");
     }
 
-    private void setAllEditTexts(View view) {
-        this.editPassword = view.findViewById(R.id.editPassword);
-        this.editConfirmPassword = view.findViewById(R.id.editConfirmPassword);
-    }
-
-    private void setAllButtons(View view) {
-        this.defineAllButtons(view);
-        this.setAllButtonListener(view);
-    }
-
-
-    private void defineAllButtons(View view) {
-        this.buttonBack = view.findViewById(R.id.buttonBack);
-        this.buttonSubmit = view.findViewById(R.id.buttonSubmit);
-    }
-
-    private void setAllButtonListener(View view) {
-        this.buttonBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
-        });
-
-        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
-            private String password, confirmPassword;
-
-            @Override
-            public void onClick(View view) {
-                this.getNewPasswordValue();
-                if(this.isPasswordFormatValid()) {
-                    this.requestServerForPasswordChange();
-                }
-            }
-
-            private boolean isPasswordFormatValid() {
-                if(password.length() == 0){
-                    editPassword.setError(getString(R.string.error_required_field_password));
-                    editPassword.requestFocus();
-                    return false;
-                }
-
-                if(confirmPassword.length() == 0){
-                    editConfirmPassword.setError(getString(R.string.error_required_field_confirm_password));
-                    editConfirmPassword.requestFocus();
-                    return false;
-                }
-
-                if(!(password.length() >= 8 && password.matches("[a-zA-Z0-9!@$%^&*()]+"))) {
-                    editPassword.setError(getString(R.string.error_format_password));
-                    editPassword.requestFocus();
-                    return false;
-                }
-
-                if(!password.equals(confirmPassword)){
-                    editConfirmPassword.setError(getString(R.string.error_passwords_unmatch));
-                    editConfirmPassword.requestFocus();
-                    return false;
-                }
-
-                return  true;
-            }
-
-            private void startLoginActivity() {
-                Intent intentLogin = new Intent(getContext(), LoginActivity.class);
-                startActivity(intentLogin);
-                getActivity().finish();
-            }
-
-            private void getNewPasswordValue() {
-                password = editPassword.getText().toString();
-                confirmPassword = editConfirmPassword.getText().toString();
-
-            }
-
-            private void requestServerForPasswordChange() {
-                mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                performPasswordChange();
-
-                            }
-                        });
-            }
-
-            private void performPasswordChange() {
-                AuthCredential credential = EmailAuthProvider.getCredential(
-                        user.getEmail(), user.getPassword());
-                final FirebaseUser firebaseUser = mAuth.getCurrentUser();
-                firebaseUser.reauthenticate(credential)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            @Override
-                            public void onComplete(@NonNull Task<Void> task) {
-                                if (task.isSuccessful()) {
-                                    firebaseUser.updatePassword(MD5.getMd5(password))
-                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if (task.isSuccessful()) {
-                                                        mAuth.signOut();
-                                                        Toast.makeText(getContext(), getString(R.string.message_forgot_password_successful), Toast.LENGTH_LONG).show();
-                                                        startLoginActivity();
-                                                    }
-                                                }
-                                            });
-                                }
-                            }
-                        });
-            }
-
-    });
-    }
-}
+//    private void getUserDetails() {
+//        this.user = (User)getArguments().getSerializable("user");
+//    }
+//
+//    private void setAllEditTexts(View view) {
+//        this.editPassword = view.findViewById(R.id.editPassword);
+//        this.editConfirmPassword = view.findViewById(R.id.editConfirmPassword);
+//    }
+//
+//    private void setAllButtons(View view) {
+//        this.defineAllButtons(view);
+//        this.setAllButtonListener(view);
+//    }
+//
+//
+//    private void defineAllButtons(View view) {
+//        this.buttonBack = view.findViewById(R.id.buttonBack);
+//        this.buttonSubmit = view.findViewById(R.id.buttonSubmit);
+//    }
+//
+//    private void setAllButtonListener(View view) {
+//        this.buttonBack.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                getFragmentManager().popBackStack();
+//            }
+//        });
+//
+//        this.buttonSubmit.setOnClickListener(new View.OnClickListener() {
+//            private String password, confirmPassword;
+//
+//            @Override
+//            public void onClick(View view) {
+//                this.getNewPasswordValue();
+//                if(this.isPasswordFormatValid()) {
+//                    this.requestServerForPasswordChange();
+//                }
+//            }
+//
+//            private boolean isPasswordFormatValid() {
+//                if(password.length() == 0){
+//                    editPassword.setError(getString(R.string.error_required_field_password));
+//                    editPassword.requestFocus();
+//                    return false;
+//                }
+//
+//                if(confirmPassword.length() == 0){
+//                    editConfirmPassword.setError(getString(R.string.error_required_field_confirm_password));
+//                    editConfirmPassword.requestFocus();
+//                    return false;
+//                }
+//
+//                if(!(password.length() >= 8 && password.matches("[a-zA-Z0-9!@$%^&*()]+"))) {
+//                    editPassword.setError(getString(R.string.error_format_password));
+//                    editPassword.requestFocus();
+//                    return false;
+//                }
+//
+//                if(!password.equals(confirmPassword)){
+//                    editConfirmPassword.setError(getString(R.string.error_passwords_unmatch));
+//                    editConfirmPassword.requestFocus();
+//                    return false;
+//                }
+//
+//                return  true;
+//            }
+//
+//            private void startLoginActivity() {
+//                Intent intentLogin = new Intent(getContext(), LoginActivity.class);
+//                startActivity(intentLogin);
+//                getActivity().finish();
+//            }
+//
+//            private void getNewPasswordValue() {
+//                password = editPassword.getText().toString();
+//                confirmPassword = editConfirmPassword.getText().toString();
+//
+//            }
+//
+//            private void requestServerForPasswordChange() {
+//                mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
+//                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<AuthResult> task) {
+//                                performPasswordChange();
+//
+//                            }
+//                        });
+//            }
+//
+//            private void performPasswordChange() {
+//                AuthCredential credential = EmailAuthProvider.getCredential(
+//                        user.getEmail(), user.getPassword());
+//                final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+//                firebaseUser.reauthenticate(credential)
+//                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                            @Override
+//                            public void onComplete(@NonNull Task<Void> task) {
+//                                if (task.isSuccessful()) {
+//                                    firebaseUser.updatePassword(MD5.getMd5(password))
+//                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+//                                                @Override
+//                                                public void onComplete(@NonNull Task<Void> task) {
+//                                                    if (task.isSuccessful()) {
+//                                                        mAuth.signOut();
+//                                                        Toast.makeText(getContext(), getString(R.string.message_forgot_password_successful), Toast.LENGTH_LONG).show();
+//                                                        startLoginActivity();
+//                                                    }
+//                                                }
+//                                            });
+//                                }
+//                            }
+//                        });
+//            }
+//
+//    });
+//    }
+//}
 
 /*
 vids

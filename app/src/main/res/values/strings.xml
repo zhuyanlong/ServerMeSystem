@@ -70,10 +70,14 @@
     <string name="use_reward_points_switch">Use Reward Points</string>
     <string name="settings_text_notification">Notification Settings</string>
     <string name="settings_text_account">Account Settings</string>
-
-
+    <string name="settings_change">Change</string>
+    <string name="settings_change_password">Change Password</string>
+    <string name="settings_first_name">First Name: </string>
+    <string name="settings_last_name">Last Name:</string>
+    <string name="settings_contact">Contact Number:</string>
+    <string name="settings_address">Address:</string>
+    <string name="settings_email">Email:</string>
     <string name="heading_profile">My Profile</string>
-
 
 
 </resources>
