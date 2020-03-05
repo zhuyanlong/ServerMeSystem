@@ -1,10 +1,12 @@
 package com.example.servemesystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,7 +20,7 @@ import com.example.servemesystem.pojo.User;
 public class ProfileFragment extends Fragment {
     private View view;
     private User user;
-
+    private LinearLayout firstLayout, lastLayout, emailLayout, passwordLayout, contactLayout, addressLayout;
     public ProfileFragment(){
 
     }
@@ -30,7 +32,7 @@ public class ProfileFragment extends Fragment {
         this.setFirstNameField();
         this.setLastNameField();
         this.setEmailIDField();
-        this.setPasswordChangeField();
+//        this.setPasswordChangeField();
         this.setContactField();
         this.setAddressField();
         this.setBackButton();
@@ -55,28 +57,30 @@ public class ProfileFragment extends Fragment {
         buttonBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getFragmentManager().popBackStack();
-            }
+                Intent intentLogin = new Intent(getContext(), LoginActivity.class);
+                startActivity(intentLogin);
+                getActivity().overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+                getActivity().finish();            }
         });
 
     }
 
     private void setFirstNameField() {
         TextView  textChange;
-        textChange = view.findViewById(R.id.textChangeFirstName);
-        textChange.setText(user.getFirstName());
-        textChange.setOnClickListener(new View.OnClickListener() {
+        textChange = view.findViewById(R.id.textFirstName);
+        textChange.setText(String.format("%s %s",getString(R.string.settings_first_name),user.getFirstName()));
+        firstLayout =  view.findViewById(R.id.layoutFirstName);
+        firstLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startFragment(new ProfileChangeFirstNameFragment());
-            }
+               startFragment(new ProfileChangeFirstNameFragment());            }
         });
     }
 
     private void setLastNameField() {
-        TextView textChange = view.findViewById(R.id.textChangeLastName);
-        textChange.setText(user.getLastName());
-        textChange.setOnClickListener(new View.OnClickListener() {
+        TextView textChange = view.findViewById(R.id.textLastName);
+        textChange.setText(String.format("%s %s",getString(R.string.settings_last_name),user.getLastName()));
+        view.findViewById(R.id.layoutLastName).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startFragment(new ProfileChangeLastNameFragment());
@@ -84,43 +88,45 @@ public class ProfileFragment extends Fragment {
         });
 
     }
-
+//
     private void setEmailIDField() {
-        TextView textChange = view.findViewById(R.id.textChangeEmail);
-        textChange.setText(user.getEmail());
-        textChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startFragment(new ProfileChangeEmailFragment());
-            }
-        });
+        TextView textChange = view.findViewById(R.id.textEmail);
+        textChange.setText(String.format("%s %s",getString(R.string.settings_email),user.getEmail()));
+//        view.findViewById(R.id.textChangeEmail).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startFragment(new ProfileChangeEmailFragment());
+//            }
+//        });
     }
-
-    private void setPasswordChangeField() {
-        TextView textChange = view.findViewById(R.id.textChangePassword);
-        textChange.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startFragment(new ProfileChangePasswordFragment());
-            }
-        });
-    }
-
+//
+//    private void setPasswordChangeField() {
+//
+//        view.findViewById(R.id.textChangePassword).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                startFragment(new ProfileChangePasswordFragment());
+//            }
+//        });
+//    }
+//
     private void setContactField() {
-        TextView textChange = view.findViewById(R.id.textChangeContactNumber);
-        textChange.setText(user.getContactNumber());
-        textChange.setOnClickListener(new View.OnClickListener() {
+        TextView textChange = view.findViewById(R.id.textContactNumber);
+        textChange.setText(String.format("%s %s",getString(R.string.settings_contact),user.getContactNumber()));
+        contactLayout = view.findViewById(R.id.layoutContact);
+        contactLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startFragment(new ProfileChangeContactNumberFragment());
             }
         });
     }
-
+//
     private void setAddressField() {
-        TextView textChange = view.findViewById(R.id.textChangeAddress);
-        textChange.setText(user.getAddress());
-        textChange.setOnClickListener(new View.OnClickListener() {
+        TextView textChange = view.findViewById(R.id.textAddress);
+        textChange.setText(String.format("%s %s %s %s %s",getString(R.string.settings_address),user.getAddress(), user.getState(), user.getCountry(), user.getZipcode()));
+        addressLayout = view.findViewById(R.id.layoutAddress);
+        addressLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startFragment(new ProfileChangeAddressFragment());
@@ -129,9 +135,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void startFragment(Fragment fragment){
-        Bundle bundle = new Bundle();
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.replace(R.id.layoutForm, fragment);
+        transaction.replace(R.id.container_fragment, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }

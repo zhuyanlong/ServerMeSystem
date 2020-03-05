@@ -2,46 +2,49 @@ package com.example.servemesystem;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.servemesystem.helper.SaveSharedPreference;
+import com.example.servemesystem.pojo.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ProfileChangeContactNumberFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class ProfileChangeContactNumberFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText editLastName;
+    private View view;
+    private User user;
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    private String collectionPath="users";
 
     public ProfileChangeContactNumberFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileChangeContactNumberFragment.
-     */
-    // TODO: Rename and change types and number of parameters
+
     public static ProfileChangeContactNumberFragment newInstance(String param1, String param2) {
         ProfileChangeContactNumberFragment fragment = new ProfileChangeContactNumberFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+
         fragment.setArguments(args);
         return fragment;
     }
@@ -49,16 +52,124 @@ public class ProfileChangeContactNumberFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_change_contact_number, container, false);
+        view = inflater.inflate(R.layout.fragment_profile_change_contact_number, container, false);
+        user = SaveSharedPreference.getUserObject(getContext());
+        this.setEditTexts();
+        this.setAllButton();
+        return view;
     }
+
+    private void setEditTexts() {
+        this.editLastName = view.findViewById(R.id.editContactNumber);
+    }
+
+    private void setAllButton() {
+        view.findViewById(R.id.buttonBack).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getFragmentManager().popBackStack();
+
+            }
+        });
+
+        view.findViewById(R.id.buttonSubmit).setOnClickListener(new View.OnClickListener() {
+            private String lastName;
+
+            @Override
+            public void onClick(View view) {
+                this.getFirstNameValue();
+                if(this.isFirstNameValid()){
+                    user.setContactNumber(lastName);
+                    this.submitValueToFirebase();
+                }
+            }
+
+            private void submitValueToFirebase() {
+//                    mAuth.getCurrentUser()
+//                            .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+//                                @Override
+//                                public void onComplete(@NonNull Task<AuthResult> task) {
+//                                    if(task.isSuccessful()){
+//                                        insertUserDetailsToFirebase();
+//                                    }
+//                                    else{
+//                                        Toast.makeText(getContext(), getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+//                                    }
+//                                }
+//                            });
+                insertUserDetailsToFirebase();
+
+            }
+
+            private boolean isFirstNameValid() {
+
+                if(lastName.isEmpty()){
+                    editLastName.setError(getString(R.string.error_required_field_first_name));
+                    editLastName.requestFocus();
+                    return false;
+                }
+                return true;
+            }
+
+            private void getFirstNameValue() {
+                lastName = editLastName.getText().toString();
+            }
+        });
+    }
+
+    private void insertUserDetailsToFirebase(){
+        db.collection(collectionPath).document(mAuth.getCurrentUser().getUid()).set(user)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        getUserInfoFromServer(user.getEmail());
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(getContext(), getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+
+                    }
+                });
+    }
+
+    private void getUserInfoFromServer(String emailId){
+        firestore.collection("users")
+                .whereEqualTo("email", emailId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<User> users = null;
+                        if (task.isSuccessful())
+                        {
+                            users = task.getResult().toObjects(User.class);
+                        }
+                        else {
+                            Toast.makeText(getContext(), getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+                        }
+
+                        if (users != null && users.size() == 1)
+                        {
+
+                            User temp = users.get(0);
+                            Log.i("ServemeSystem User Info", temp.toString());
+                            user.setContactNumber(temp.getContactNumber());
+                            SaveSharedPreference.removeUserObject(getContext());
+                            SaveSharedPreference.setUserObject(getContext(), user);
+                            getFragmentManager().popBackStack();
+
+                        }
+                    }
+                });
+    }
+
 }
