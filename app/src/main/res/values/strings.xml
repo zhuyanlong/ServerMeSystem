@@ -43,17 +43,22 @@
     <string name="error_format_password">Invalid password format. Require 8 characters. Characters allowed are alphabets, numbers and special characters </string>
     <string name="error_email_already_exist">Email exists</string>
     <string name="error_contact_already_exist">Contact number exists</string>
+    <string name="error_invalid_otp">Invalid OTP</string>
+    <string name="error_generic">Oops !! Something went wrong. Try Again.</string>
 
     <string name="message_registration_success">Registration Succesfull</string>
     <string name="message_forgot_password_activity">Enter email ID to receive OTP</string>
-    <string name="message_forgot_password_otp">Enter OTP</string>
+    <string name="message_forgot_password_otp">OTP was sent to your phone number. Enter that OTP here.</string>
     <string name="message_forgot_password_new_password">Enter new password</string>
+    <string name="message_forgot_password_successful">Password changed successfully</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="heading_forgot_password">Forgot Password</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="open">open</string>
+    <string name="close">close</string>
 
 
 </resources>

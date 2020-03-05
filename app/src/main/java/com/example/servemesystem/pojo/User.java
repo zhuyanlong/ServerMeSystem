@@ -1,23 +1,36 @@
 package com.example.servemesystem.pojo;
 
-public class User {
-    private String firstname;
-    private String lastname;
+import java.io.Serializable;
 
-    public String getFirstname() {
-        return firstname;
+public class User implements Serializable {
+    private String firstName;
+    private String lastName;
+    private String email;
+    private String address;
+    private String state;
+    private String country;
+    private String zipcode;
+    private String contactNumber;
+
+
+    private String password;
+
+
+
+    public String getFirstName() {
+        return firstName;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
-    public String getLastname() {
-        return lastname;
+    public String getLastName() {
+        return lastName;
     }
 
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
     }
 
     public String getEmail() {
@@ -52,28 +65,44 @@ public class User {
         this.country = country;
     }
 
-    public String getZip() {
-        return zip;
+    public String getZipcode() {
+        return zipcode;
     }
 
-    public void setZip(String zip) {
-        this.zip = zip;
+    public void setZipcode(String zipcode) {
+        this.zipcode = zipcode;
     }
 
-    public String getContact() {
-        return contact;
+    public String getContactNumber() {
+        return contactNumber;
     }
 
-    public void setContact(String contact) {
-        this.contact = contact;
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
-    private String email;
-    private String address;
-    private String state;
-    private String country;
-    private String zip;
-    private String contact;
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
+
+    public User(String firstName, String lastName, String email, String address, String state, String country, String zipcode, String contactNumber) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.address = address;
+        this.state = state;
+        this.country = country;
+        this.zipcode = zipcode;
+        this.contactNumber = contactNumber;
+    }
+
+
 
     public User() {
 
@@ -81,16 +110,20 @@ public class User {
 
     }
 
-    public User(String firstname, String lastname, String email, String contact, String address, String state, String country, String zip) {
-        this.firstname = firstname;
-        this.lastname = lastname;
-        this.email = email;
-        this.address = address;
-        this.state = state;
-        this.country = country;
-        this.zip = zip;
-        this.contact = contact;
+    @Override
+    public String toString() {
+        return "User{" +
+                "firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", state='" + state + '\'' +
+                ", country='" + country + '\'' +
+                ", zipcode='" + zipcode + '\'' +
+                ", contactNumber='" + contactNumber + '\'' +
+                '}';
     }
 
 
-    }
+
+}

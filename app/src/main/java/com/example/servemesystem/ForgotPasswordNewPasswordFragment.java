@@ -3,6 +3,7 @@ package com.example.servemesystem;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -10,11 +11,27 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
+
+import com.example.servemesystem.helper.MD5;
+import com.example.servemesystem.pojo.User;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.EmailAuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 
 public class ForgotPasswordNewPasswordFragment extends Fragment {
     private Button buttonBack, buttonSubmit;
     private EditText editPassword, editConfirmPassword;
+    private User user;
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
 
     public ForgotPasswordNewPasswordFragment() {
         // Required empty public constructor
@@ -40,9 +57,14 @@ public class ForgotPasswordNewPasswordFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_forgot_password_new_password, container, false);
+        this.getUserDetails();
         this.setAllEditTexts(view);
         this.setAllButtons(view);
         return view;
+    }
+
+    private void getUserDetails() {
+        this.user = (User)getArguments().getSerializable("user");
     }
 
     private void setAllEditTexts(View view) {
@@ -77,7 +99,6 @@ public class ForgotPasswordNewPasswordFragment extends Fragment {
                 this.getNewPasswordValue();
                 if(this.isPasswordFormatValid()) {
                     this.requestServerForPasswordChange();
-                    this.startLoginActivity();
                 }
             }
 
@@ -122,11 +143,59 @@ public class ForgotPasswordNewPasswordFragment extends Fragment {
             }
 
             private void requestServerForPasswordChange() {
-                //
+                mAuth.signInWithEmailAndPassword(user.getEmail(), user.getPassword())
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                performPasswordChange();
+
+                            }
+                        });
             }
-        });
+
+            private void performPasswordChange() {
+                AuthCredential credential = EmailAuthProvider.getCredential(
+                        user.getEmail(), user.getPassword());
+                final FirebaseUser firebaseUser = mAuth.getCurrentUser();
+                firebaseUser.reauthenticate(credential)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    firebaseUser.updatePassword(MD5.getMd5(password))
+                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<Void> task) {
+                                                    if (task.isSuccessful()) {
+                                                        mAuth.signOut();
+                                                        Toast.makeText(getContext(), getString(R.string.message_forgot_password_successful), Toast.LENGTH_LONG).show();
+                                                        startLoginActivity();
+                                                    }
+                                                }
+                                            });
+                                }
+                            }
+                        });
+            }
+
+    });
     }
-
-
-
 }
+
+/*
+vids
+2
+3
+4
+5
+6
+7
+8
+
+ppt
+chap 3 pg 5 9 10 35 36 37 39 43 46 49 63
+agile notes all 3 pages
+scrum framework ppt all pgs
+
+ */
+
