@@ -5,7 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -15,29 +17,48 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.servemesystem.helper.MD5;
+import com.example.servemesystem.helper.SaveSharedPreference;
+import com.example.servemesystem.pojo.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.List;
 
 
 public class LoginActivity extends AppCompatActivity {
+    public static String TAG = "ServeMeSystem :: LoginActivity";
+
     private TextView textRegister;
     private TextView textForgotPassword;
     private Button buttonLogin;
     private EditText editEmail, editPassword;
     private FirebaseAuth mAuth;
-
+    private FirebaseFirestore firestore;
+    private User user;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        if(this.isUserLoggedIn())
+            startHomeActivity();
         this.setAllEditTexts();
         this.setAllTextViews();
         this.setAllButtons();
         this.setEditPasswordListener();
+    }
+
+    private boolean isUserLoggedIn() {
+        user = SaveSharedPreference.getUserObject(LoginActivity.this);
+        if(user != null)
+            return true;
+        return false;
     }
 
     private void setAllButtons() {
@@ -61,6 +82,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setAllButtonListener() {
         mAuth = FirebaseAuth.getInstance();
+        firestore = FirebaseFirestore.getInstance();
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             private String email, password;
             @Override
@@ -74,11 +96,7 @@ public class LoginActivity extends AppCompatActivity {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
-                                                Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                                                startActivity(intent);
-                                                finish();
-                                                Toast.makeText(getApplicationContext(), "Login successful!", Toast.LENGTH_LONG).show();
+                                                getUserInfoFromServer(email);
                                             } else {
                                                 //login failed
                                                 Toast.makeText(getApplicationContext(), "Login failed!", Toast.LENGTH_LONG).show();
@@ -153,4 +171,40 @@ public class LoginActivity extends AppCompatActivity {
         this.editEmail = findViewById(R.id.editEmail);
         this.editPassword = findViewById(R.id.editPassword);
     }
-}
+
+    private void startHomeActivity(){
+        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+        intent.putExtra("user", user);
+        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        startActivity(intent);
+        finish();
+    }
+
+    private void getUserInfoFromServer(String emailId){
+        firestore.collection("users")
+                .whereEqualTo("email", emailId)
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        List<User> users = null;
+                        if (task.isSuccessful())
+                        {
+                            users = task.getResult().toObjects(User.class);
+                        }
+                        else {
+                            Toast.makeText(LoginActivity.this, getString(R.string.error_generic), Toast.LENGTH_LONG).show();
+                        }
+
+                        if (users != null && users.size() == 1)
+                        {
+                            user = users.get(0);
+                            Log.i(TAG, user.toString());
+                            SaveSharedPreference.setUserObject(LoginActivity.this, user);
+                            startHomeActivity();
+
+                        }
+                    }
+                });
+    }
+    }

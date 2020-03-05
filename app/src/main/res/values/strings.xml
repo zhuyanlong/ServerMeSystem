@@ -43,11 +43,14 @@
     <string name="error_format_password">Invalid password format. Require 8 characters. Characters allowed are alphabets, numbers and special characters </string>
     <string name="error_email_already_exist">Email exists</string>
     <string name="error_contact_already_exist">Contact number exists</string>
+    <string name="error_invalid_otp">Invalid OTP</string>
+    <string name="error_generic">Oops !! Something went wrong. Try Again.</string>
 
     <string name="message_registration_success">Registration Succesfull</string>
     <string name="message_forgot_password_activity">Enter email ID to receive OTP</string>
-    <string name="message_forgot_password_otp">Enter OTP</string>
+    <string name="message_forgot_password_otp">OTP was sent to your phone number. Enter that OTP here.</string>
     <string name="message_forgot_password_new_password">Enter new password</string>
+    <string name="message_forgot_password_successful">Password changed successfully</string>
 
     <string name="heading_vendor_register">Vendor Registration</string>
     <string name="message_vendor_register_agreement">I agree to pay 10% of money received as fee to ServeMe.</string>
@@ -68,10 +71,14 @@
     <string name="use_reward_points_switch">Use Reward Points</string>
     <string name="settings_text_notification">Notification Settings</string>
     <string name="settings_text_account">Account Settings</string>
-
-
-
-
+    <string name="settings_change">Change</string>
+    <string name="settings_change_password">Change Password</string>
+    <string name="settings_first_name">First Name: </string>
+    <string name="settings_last_name">Last Name:</string>
+    <string name="settings_contact">Contact Number:</string>
+    <string name="settings_address">Address:</string>
+    <string name="settings_email">Email:</string>
+    <string name="heading_profile">My Profile</string>
 
 
 </resources>

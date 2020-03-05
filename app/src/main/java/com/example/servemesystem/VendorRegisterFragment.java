@@ -90,19 +90,23 @@ public class VendorRegisterFragment extends Fragment {
                     if(checkedNum == 0){
                         showMessage("At least one service should be selected.");
                     }
-
-                    //print
-                    for(Map.Entry<String, String> a:serviceRegistered.entrySet()){
-                        System.out.println(a.getKey()+" : " + a.getValue());
+                    else if(checkedNum == -1){
+                        //no price
                     }
+                    else {
+                        //print
+//                        for(Map.Entry<String, String> a:serviceRegistered.entrySet()){
+//                            System.out.println(a.getKey()+" : " + a.getValue());
+//                        }
 
-                    //after submit, jump to home page
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.beginTransaction()
-                            .replace(R.id.container_fragment, new HomeFragment())
-                            .commit();
+                        //after submit, jump to home page
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        fm.beginTransaction()
+                                .replace(R.id.container_fragment, new HomeFragment())
+                                .commit();
 
-                    showMessage("Service Registration Successful.");
+                        showMessage("Service Registration Successful.");
+                    }
                 }
             }
         });

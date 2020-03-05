@@ -27,7 +27,6 @@ public class VendorRegisterActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_vendor_register);
-
         this.buttonSubmit = findViewById(R.id.button_vendorRegister_submit);
         this.checkBoxAgreement = findViewById(R.id.checkBox_agreement);
 

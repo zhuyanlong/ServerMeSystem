@@ -15,6 +15,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.MenuItem;
+
+import com.example.servemesystem.helper.SaveSharedPreference;
+import com.google.android.material.navigation.NavigationView;
+
+
 public class HomeActivity extends AppCompatActivity
     implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -88,6 +96,14 @@ public class HomeActivity extends AppCompatActivity
             fragmentTransaction.commit();
         }
 
+        if(menuItem.getItemId() == R.id.logout){
+            SaveSharedPreference.removeUserObject(HomeActivity.this);
+            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+
+        }
+
         if(menuItem.getItemId() == R.id.become_vendor){
             fragmentManager = getSupportFragmentManager();
             fragmentTransaction = fragmentManager.beginTransaction();
@@ -98,6 +114,7 @@ public class HomeActivity extends AppCompatActivity
         if(menuItem.getItemId() == R.id.setting){
             // TODO This is the menu item for settings.
         }
+
         return true;
     }
 }

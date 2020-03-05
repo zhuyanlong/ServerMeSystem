@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.servemesystem.pojo.User;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -219,7 +220,7 @@ public class RegisterActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                                 //find email
                                 if (task.isSuccessful()) {
-                                        Log.d("emailExist","emailExist");
+                                    Log.d("emailExist","emailExist");
                                     etEmail.setError(getString(R.string.error_email_already_exist));
                                     etEmail.requestFocus();
                                     //not find email
