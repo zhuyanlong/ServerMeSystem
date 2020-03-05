@@ -1,5 +1,6 @@
 package com.example.servemesystem;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.MenuItem;
 
@@ -88,7 +89,10 @@ public class HomeActivity extends AppCompatActivity
         }
 
         if(menuItem.getItemId() == R.id.become_vendor){
-            // TODO This is the menu item for vendor registration.
+            fragmentManager = getSupportFragmentManager();
+            fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.container_fragment, new VendorRegisterFragment());
+            fragmentTransaction.commit();
         }
 
         if(menuItem.getItemId() == R.id.setting){
