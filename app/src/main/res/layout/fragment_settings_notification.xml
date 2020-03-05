@@ -77,7 +77,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
             <Switch
-                android:id="@+id/switch3"
+                android:id="@+id/communication_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="" />
@@ -100,12 +100,36 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
             <Switch
-                android:id="@+id/switch4"
+                android:id="@+id/rewards_switch"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="40sp"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/buttonNotificatonBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimaryDark"
+                android:text="@string/button_back"
+                android:textColor="@color/colorPrimary" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
     </LinearLayout>
 </LinearLayout>

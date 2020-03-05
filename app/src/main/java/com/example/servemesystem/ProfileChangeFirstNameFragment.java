@@ -65,6 +65,7 @@ public class ProfileChangeFirstNameFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_profile_change_first_name, container, false);
+        user = SaveSharedPreference.getUserObject(getContext());
         this.setEditTexts();
         this.setAllButton();
         return view;
@@ -90,6 +91,7 @@ public class ProfileChangeFirstNameFragment extends Fragment {
             public void onClick(View view) {
                 this.getFirstNameValue();
                 if(this.isFirstNameValid()){
+                    user.setFirstName(firstName);
                     this.submitValueToFirebase();
                 }
             }
@@ -162,7 +164,10 @@ public class ProfileChangeFirstNameFragment extends Fragment {
 
                         if (users != null && users.size() == 1)
                         {
-                            user = users.get(0);
+
+                            User temp = users.get(0);
+                            Log.i("ServemeSystem User Info", temp.toString());
+                            user.setFirstName(temp.getFirstName());
                             SaveSharedPreference.removeUserObject(getContext());
                             SaveSharedPreference.setUserObject(getContext(), user);
                             getFragmentManager().popBackStack();
